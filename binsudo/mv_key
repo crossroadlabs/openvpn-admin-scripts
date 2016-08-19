@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$DIR/../config.sh"
+source "$DIR/../utils/user.sh"
+source "$OPENVPN_VARS"
+
+name=$(basename "$1")
+name=$(cleanup_username "$name")
+
+if [ -z "$name" -o "$name" == "server.key" -o "$name" == "server.crt" -o "$name" == "ca.crt" ] ; then
+	exit 1
+fi
+
+mv "$KEY_DIR/$name" "$2"
+
+exit 0

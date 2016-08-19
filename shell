@@ -1,0 +1,82 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function print_hello {
+	echo "=================================================="
+	echo "    $SERVER_HELLO_MESSAGE"
+	echo "=================================================="
+        echo ""
+}
+
+function print_usage {
+	echo "Avialable commands:"
+	echo -e "\tnew <username> <email>\t -- create new user key."
+	echo -e "\tnotify <username>\t -- send email with key to user"
+	echo -e "\temail <username>\t -- get stored email for user"
+	echo -e "\tbackup <username>\t -- move user key to backup"
+	echo -e "\tscp -f <username>.zip\t -- zip and download key"
+	echo -e "\trevoke <username>\t -- revoke user key"
+	echo ""
+}
+
+if [ "$#" == "0" ]; then
+	print_hello
+	print_usage
+	exit 0
+fi
+
+
+source "$DIR/utils/error.sh"
+source "$DIR/utils/user.sh"
+source "$DIR/utils/email.sh"
+
+PARAMS=($2)
+
+case "${PARAMS[0]}" in
+	scp)
+		if [ "${PARAMS[1]}" == "-t" ] ; then
+			print_error "Upload via scp is disabled"
+			exit 1
+		fi
+		filename=$(cleanup_username "${PARAMS[2]}")
+		"${DIR}/commands/download" "${filename%.zip}"
+		;;
+	new)
+		print_hello
+		user=$(cleanup_username "${PARAMS[1]}")
+		if [ -z "${user}" ] || [ -z "${PARAMS[2]}" ] || [ "$(check_email ${PARAMS[2]})" == "0" ] ; then
+			print_error "Bad parameters: \"${PARAMS[1]} ${PARAMS[2]}\""
+			print_usage
+			exit 1
+		fi
+		"${DIR}/commands/new" "${user}" "${PARAMS[2]}"
+		;;
+	notify)
+		print_hello
+		user=$(cleanup_username "${PARAMS[1]}")
+		"${DIR}/commands/notify" "${user}"
+		;;
+	revoke)
+		print_hello
+                user=$(cleanup_username "${PARAMS[1]}")
+		"${DIR}/commands/revoke" "${user}"
+		;;
+	email)
+		print_hello
+		user=$(cleanup_username "${PARAMS[1]}")
+		echo "Stored email for user $user is: $(user_email $user)"
+		;;
+	backup)
+		print_hello
+		user=$(cleanup_username "${PARAMS[1]}")
+		"${DIR}/commands/backup" "${user}"
+		;;
+	*)
+		print_hello
+		print_usage
+		exit 0
+esac
+
+exit 0

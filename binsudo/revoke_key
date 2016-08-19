@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+cource "$DIR/../utils/user.sh"
+source "$OPENVPN_VARS"
+
+name=$(cleanup_username "$1")
+
+export EASY_RSA="${EASY_RSA:-.}"
+
+"$EASY_RSA/revoke_full" "$name"
+
+if [ -f "$KEY_DIR/$name.key" ] ; then
+	rm "$KEY_DIR/$name".*
+fi
+
+if [ -f "$OPENVPN_KEY_BACKUP_DIR/$name.key" ] ; then
+	rm "$OPENVPN_KEY_BACKUP_DIR/$name".*
+fi

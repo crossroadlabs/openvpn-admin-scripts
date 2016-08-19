@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+source "$DIR/../utils/error.sh"
+source "$DIR/../utils/user.sh"
+
+name=$(cleanup_username "$1")
+
+export KEY_NAME="$name"
+export KEY_EMAIL="$2"
+
+if [ "$(user_exists $name)" == "1" ] ; then
+	print_error "User already exists: $1"
+	exit 1
+fi
+
+sudo -H -u openvpn "$DIR/../binsudo/new_key" $KEY_NAME $KEY_EMAIL
+
+if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
+	if [ "$SEND_KEY_ZIP_IN_NOTIFICATION" == "yes" ] ; then
+		source "$DIR/../utils/zip_user_key.sh"
+		zfile=$(zip_user_key $KEY_NAME)
+	else
+		zfile=""
+	fi
+
+	export USERNAME="$KEY_NAME"
+	export EMAIL="$KEY_EMAIL"
+	export THEME="$NEW_KEY_MAIL_THEME"
+
+	message=$("$DIR/../$NEW_KEY_MAIL_TEMPLATE")
+
+	source "$DIR/../utils/email.sh"
+	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$NEW_KEY_MAIL_THEME" "$message" "$zfile")
+	if [ "$result" != "0" ] ; then
+                print_error "Mail notification failed"
+        fi
+fi
+
+echo "Key created for user: $KEY_NAME"
+echo ""
+
+exit 0

@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+source "$DIR/../utils/error.sh"
+source "$DIR/../utils/user.sh"
+
+name=$(cleanup_username "$1")
+KEY_NAME="$name"
+
+if [ "$(user_exists $name)" == "0" ] ; then
+	print_error "User does not exist: $1"
+	exit 1
+fi
+
+KEY_EMAIL=$(user_email "$KEY_NAME")
+
+if [ -n "$KEY_EMAIL" ] ; then
+	source "$DIR/../utils/zip_user_key.sh"
+	zfile=$(zip_user_key "$KEY_NAME" "yes")
+
+	export USERNAME="$KEY_NAME"
+	export EMAIL="$KEY_EMAIL"
+	export THEME="$NEW_KEY_MAIL_THEME"
+
+	message=$("$DIR/../$NEW_KEY_MAIL_TEMPLATE")
+
+	source "$DIR/../utils/email.sh"
+
+	result=$(send_email "$KEY_EMAIL" "$NEW_KEY_MAIL_THEME" "$message" "$zfile")
+
+	rm -f "$zfile"
+
+	if [ "$result" != "0" ] ; then
+		print_error "SendMail failed"
+		exit 2
+	fi
+else
+	print_error "Can't find email for user: $KEY_NAME"
+	exit 1
+fi
+
+echo "User: $KEY_NAME notified"
+echo ""
+
+exit 0

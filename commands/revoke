@@ -1,0 +1,37 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+source "$DIR/../utils/error.sh"
+source "$DIR/../utils/user.sh"
+
+name=$(cleanup_username "$1")
+export KEY_NAME="$name"
+
+if [ "$(user_exists $name)" == "0" ] ; then
+	print_error "User does not exist: $1"
+	exit 1
+fi
+
+sudo -H -u openvpn "$DIR/../binsudo/revoke_key" $KEY_NAME
+
+if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
+
+	export USERNAME="$KEY_NAME"
+	export THEME="$REVOKE_KEY_MAIL_THEME"
+
+	message=$("$DIR/../$REVOKE_KEY_MAIL_TEMPLATE")
+
+	source "$DIR/../utils/email.sh"
+	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$THEME" "$message" "")
+	if [ "$result" != "0" ] ; then
+                print_error "Mail notification failed"
+        fi
+fi
+
+echo "Revoked key for user: $KEY_NAME"
+echo ""
+
+exit 0
