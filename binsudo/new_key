@@ -4,7 +4,7 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source "$DIR/../config.sh"
-source "$DIR/../user.sh"
+source "$DIR/../utils/user.sh"
 source "$OPENVPN_VARS"
 
 export KEY_NAME=$(cleanup_username "$1")
