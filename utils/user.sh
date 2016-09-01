@@ -30,7 +30,7 @@ function user_email {
         if [ -n "$user_line" ]; then
                 user_info=($user_line)
                 if [ "${user_info[0]}" == "V" ] ; then
-			echo $(echo "$user_line" | perl -ne 's|.*?emailAddress=([a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+)|\1|; print "$1"')
+			echo $(echo "$user_line" | perl -ne 's|.*?emailAddress=([a-zA-Z0-9\.\-_]+@[a-zA-Z0-9\.\-]+)|\1|; print "$1"')
 			return 0
 		fi
         fi
