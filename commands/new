@@ -20,11 +20,11 @@ fi
 sudo -H -u openvpn "$DIR/../binsudo/new_key" $KEY_NAME $KEY_EMAIL
 
 if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
-	if [ "$SEND_KEY_ZIP_IN_NOTIFICATION" == "yes" ] ; then
-		source "$DIR/../utils/zip_user_key.sh"
-		zfile=$(zip_user_key $KEY_NAME)
+	if [ "$SEND_USER_CONF_IN_NOTIFICATION" == "yes" ] ; then
+		source "$DIR/../utils/generate_user_conf.sh"
+		cfile=$(generate_user_conf $KEY_NAME)
 	else
-		zfile=""
+		cfile=""
 	fi
 
 	export USERNAME="$KEY_NAME"
@@ -34,10 +34,15 @@ if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
 	message=$("$DIR/../$NEW_KEY_MAIL_TEMPLATE")
 
 	source "$DIR/../utils/email.sh"
-	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$NEW_KEY_MAIL_THEME" "$message" "$zfile")
+	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$NEW_KEY_MAIL_THEME" "$message" "$cfile")
+
+	if [ -n "$cfile" ] ; then
+		rm -rf "$(dirname "$cfile")"
+	fi
+
 	if [ "$result" != "0" ] ; then
-                print_error "Mail notification failed"
-        fi
+    print_error "Mail notification failed"
+  fi
 fi
 
 echo "Key created for user: $KEY_NAME"

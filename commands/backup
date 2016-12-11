@@ -11,8 +11,8 @@ source "$OPENVPN_VARS"
 name=$(cleanup_username "$1")
 
 if [ "$(user_exists $name)" == "0" ] ; then
-        print_error "User does not exist: $name"
-        exit 1
+  print_error "User does not exist: $name"
+  exit 1
 fi
 
 if [ ! -f "$KEY_DIR/$name.crt" ] ; then

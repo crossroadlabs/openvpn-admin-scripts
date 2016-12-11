@@ -18,8 +18,8 @@ fi
 KEY_EMAIL=$(user_email "$KEY_NAME")
 
 if [ -n "$KEY_EMAIL" ] ; then
-	source "$DIR/../utils/zip_user_key.sh"
-	zfile=$(zip_user_key "$KEY_NAME" "yes")
+	source "$DIR/../utils/generate_user_conf.sh"
+	cfile=$(generate_user_conf "$KEY_NAME" "yes")
 
 	export USERNAME="$KEY_NAME"
 	export EMAIL="$KEY_EMAIL"
@@ -29,9 +29,9 @@ if [ -n "$KEY_EMAIL" ] ; then
 
 	source "$DIR/../utils/email.sh"
 
-	result=$(send_email "$KEY_EMAIL" "$NEW_KEY_MAIL_THEME" "$message" "$zfile")
+	result=$(send_email "$KEY_EMAIL" "$NEW_KEY_MAIL_THEME" "$message" "$cfile")
 
-	rm -f "$zfile"
+	rm -rf "$(dirname "$cfile")"
 
 	if [ "$result" != "0" ] ; then
 		print_error "SendMail failed"

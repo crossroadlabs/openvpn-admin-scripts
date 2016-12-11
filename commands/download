@@ -15,8 +15,8 @@ if [ "$(user_exists $name)" == "0" ] ; then
         exit 1
 fi
 
-source "$DIR/../utils/zip_user_key.sh"
+source "$DIR/../utils/zip_user_conf.sh"
 
-zipfile=$(zip_user_key "$name")
+zipfile=$(zip_user_conf "$name")
 scp -f "$zipfile"
-rm "$zipfile"
+rm -rf "$(dirname "$zipfile")"

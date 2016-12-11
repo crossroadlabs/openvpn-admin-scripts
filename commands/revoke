@@ -27,8 +27,8 @@ if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
 	source "$DIR/../utils/email.sh"
 	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$THEME" "$message" "")
 	if [ "$result" != "0" ] ; then
-                print_error "Mail notification failed"
-        fi
+		print_error "Mail notification failed"
+  fi
 fi
 
 echo "Revoked key for user: $KEY_NAME"

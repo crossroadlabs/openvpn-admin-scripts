@@ -2,7 +2,7 @@ SERVER_HELLO_MESSAGE="VPN admin interface." # Hello message on login
 
 NOTIFY_ON_CHANGE_EMAIL="test@test.com" # Email which will be notified on new and revoke actions. Notifications disabled if empty
 
-SEND_KEY_ZIP_IN_NOTIFICATION="yes" # Attach key zip to this notification
+SEND_USER_CONF_IN_NOTIFICATION="yes" # Attach user config to this notification
 
 NEW_KEY_MAIL_THEME="VPN Access Granted" # Theme of new key notification email
 
@@ -13,8 +13,6 @@ NEW_KEY_MAIL_TEMPLATE="new_key.tsh" # Template for body of new key email (bash s
 REVOKE_KEY_MAIL_TEMPLATE="revoke_key.tsh" # Template for body of revoke email (bash script with echo)
 
 OPENVPN_VARS="/etc/openvpn/vars" # Path to edited easy-rsa vars
-
-OPENVPN_OSX_CONF_BUNDLE="Template.tblk" # Path to .tblk preconfigured bundle (without keys)
 
 OPENVPN_CONF_TEMPLATE="Template.ovpn" # Path to preconfigured .ovpn (without keys)
 
