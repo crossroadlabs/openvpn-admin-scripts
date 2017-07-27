@@ -11,7 +11,7 @@ name=$(cleanup_username "$1")
 
 export EASY_RSA="${EASY_RSA:-.}"
 
-"$EASY_RSA/revoke_full" "$name"
+"$EASY_RSA/revoke-full" "$name"
 
 if [ -f "$KEY_DIR/$name.key" ] ; then
 	rm "$KEY_DIR/$name".*
