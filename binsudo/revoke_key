@@ -11,7 +11,7 @@ name=$(cleanup_username "$1")
 
 export EASY_RSA="${EASY_RSA:-.}"
 
-result=$("$EASY_RSA/revoke-full" "$name"; exit 0)
+result=$("$EASY_RSA/revoke-full" "$name" 2>&1)
 echo "$result"
 revoked=$(echo "$result" | grep "certificate revoked" > /dev/null; echo "$?")
 echo "Revoked: $revoked"
