@@ -11,7 +11,14 @@ name=$(cleanup_username "$1")
 
 export EASY_RSA="${EASY_RSA:-.}"
 
-"$EASY_RSA/revoke-full" "$name"
+result=$("$EASY_RSA/revoke-full" "$name")
+echo "$result"
+revoked=$(echo "$result" | grep "certificate revoked" > /dev/null; echo "$?")
+
+if [ "$revoked" != "0" ] ; then
+	echo "Error: Can't revoke. Check openssl output"
+	exit 1
+fi
 
 if [ -f "$KEY_DIR/$name.key" ] ; then
 	rm "$KEY_DIR/$name".*
