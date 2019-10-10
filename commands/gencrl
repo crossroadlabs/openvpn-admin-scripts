@@ -3,6 +3,6 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$DIR/../bin.sh"
+source "$DIR/../utils/bin.sh"
 
 run_bin_command "gen_crl"
