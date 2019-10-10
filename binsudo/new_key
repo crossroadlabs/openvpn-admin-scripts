@@ -9,5 +9,5 @@ source "$DIR/../utils/easyrsa.sh"
 export EASYRSA_REQ_NAME=$(cleanup_username "$1")
 export EASYRSA_REQ_EMAIL="$2"
 
-easyrsa_call --batch --req-cn="$EASYRSA_REQ_NAME" --req-email="$EASYRSA_REQ_EMAIL" gen-req "$EASYRSA_REQ_NAME" nopass
+easyrsa_call --batch --dn-mode=org --req-cn="$EASYRSA_REQ_NAME" --req-email="$EASYRSA_REQ_EMAIL" gen-req "$EASYRSA_REQ_NAME" nopass
 easyrsa_call --batch sign-req client "$EASYRSA_REQ_NAME"
