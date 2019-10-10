@@ -1,24 +1,22 @@
 function generate_user_conf {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 	source "$DIR/../config.sh"
-	source "$DIR/easyrsa.sh"
+	source "$DIR/bin.sh"
 
 	if [ -z "$TMP" ]; then
 		TMP="/tmp"
 	fi
 
-	PKI="$(easyrsa_pki_path)"
-
 	tmp=$(mktemp -d)
 
-	if [ -f "$PKI/issued/$1.crt" ] ; then
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "private/$1.key" > "$tmp/$1.key"
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "issued/$1.crt" > "$tmp/$1.crt"
-	else
-		print_error "Key not found."
-	fi
-
-	sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "ca.crt" > "$tmp/ca.crt"
+	if [ "$(user_exists $name)" == "0" ] ; then
+    print_error "User does not exist: $1"
+    exit 1
+  fi
+	
+  run_bin_command "cat_pki" "private/$1.key" > "$tmp/$1.key"
+  run_bin_command "cat_pki" "issued/$1.crt" > "$tmp/$1.crt"
+  run_bin_command "cat_pki" "ca.crt" > "$tmp/ca.crt"
 
 	otmp=$(mktemp -d)
 	cp "$DIR/../$OPENVPN_CONF_TEMPLATE" "$otmp/"

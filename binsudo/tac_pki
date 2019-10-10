@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../utils/easyrsa.sh"
+
+name="$1"
+
+if [ -z "$name" ] ; then
+	exit 1
+fi
+
+if [[ "$name" =~ \.\. ]] ; then
+  exit 1
+fi
+
+if [[ "$name" =~ server\..+$ ]] ; then
+  exit 1
+fi
+
+PKI="$(easyrsa_pki_path)"
+
+tac "$PKI/$name"
+
+exit 0

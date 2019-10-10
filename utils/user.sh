@@ -4,16 +4,14 @@ function cleanup_username {
 
 function user_exists {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-	source "$DIR/easyrsa.sh"
+	source "$DIR/bin.sh"
 
 	if [ -z "$1" ] ; then
 		echo "0"
 		return 0
 	fi
 
-	PKI="$(easyrsa_pki_path)"
-
-	user_line=$(tac "$PKI/index.txt" | grep "$1" | tail -n 1)
+	user_line=$(run_bin_command "tac_pki" "index.txt" | grep "$1" | tail -n 1)
 	if [ -n "$user_line" ]; then
 		user_info=($user_line)
 		[[ "${user_info[0]}" == "V" ]] && echo "1" || echo  "0"
@@ -24,11 +22,9 @@ function user_exists {
 
 function user_email {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-  source "$DIR/easyrsa.sh"
-  
-	PKI="$(easyrsa_pki_path)"
+  source "$DIR/bin.sh"
 
-	user_line=$(tac "$PKI/index.txt" | grep "$1" | tail -n 1)
+	user_line=$(run_bin_command "tac_pki" "index.txt" | grep "$1" | tail -n 1)
   if [ -n "$user_line" ]; then
     user_info=($user_line)
     if [ "${user_info[0]}" == "V" ] ; then

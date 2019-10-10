@@ -6,6 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../config.sh"
 source "$DIR/../utils/error.sh"
 source "$DIR/../utils/user.sh"
+source "$DIR/../utils/bin.sh"
 
 name=$(cleanup_username "$1")
 
@@ -17,7 +18,7 @@ if [ "$(user_exists $name)" == "1" ] ; then
 	exit 1
 fi
 
-sudo -H -u $OPENVPN_USER "$DIR/../binsudo/new_key" $EASYRSA_REQ_NAME $EASYRSA_REQ_EMAIL
+run_bin_command "new_key" $EASYRSA_REQ_NAME $EASYRSA_REQ_EMAIL
 
 if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
 	if [ "$SEND_USER_CONF_IN_NOTIFICATION" == "yes" ] ; then
