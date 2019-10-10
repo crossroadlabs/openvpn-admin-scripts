@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../utils/user.sh"
+source "$DIR/../utils/easyrsa.sh"
+
+export EASYRSA_REQ_NAME=$(cleanup_username "$1")
+
+easyrsa_call --batch renew "$EASYRSA_REQ_NAME" nopass

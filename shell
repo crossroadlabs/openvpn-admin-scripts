@@ -19,6 +19,7 @@ function print_usage {
 	echo -e "\temail <username>\t -- get stored email for user"
 	echo -e "\tscp -f <username>.zip\t -- zip and download key"
 	echo -e "\trevoke <username>\t -- revoke user key"
+	echo -e "\trenew <username>\t -- renew user key."
 	echo ""
 }
 
@@ -63,6 +64,11 @@ case "${PARAMS[0]}" in
 		print_hello
     user=$(cleanup_username "${PARAMS[1]}")
 		"${DIR}/commands/revoke" "${user}"
+		;;
+	renew)
+		print_hello
+    user=$(cleanup_username "${PARAMS[1]}")
+		"${DIR}/commands/renew" "${user}"
 		;;
 	email)
 		print_hello

@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+source "$DIR/../utils/error.sh"
+source "$DIR/../utils/user.sh"
+source "$DIR/../utils/bin.sh"
+
+name=$(cleanup_username "$1")
+export EASYRSA_REQ_NAME="$name"
+
+if [ "$(user_exists $name)" == "0" ] ; then
+	print_error "User does not exist: $1"
+	exit 1
+fi
+
+run_bin_command "renew_key" $EASYRSA_REQ_NAME
+
+if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
+
+	export USERNAME="$EASYRSA_REQ_NAME"
+	export THEME="$RENEW_KEY_MAIL_THEME"
+
+	message=$("$DIR/../$RENEW_KEY_MAIL_TEMPLATE")
+
+	source "$DIR/../utils/email.sh"
+	result=$(send_email $NOTIFY_ON_CHANGE_EMAIL "$THEME" "$message" "")
+	if [ "$result" != "0" ] ; then
+		print_error "Mail notification failed"
+  fi
+fi
+
+echo "Renewed key for user: $EASYRSA_REQ_NAME"
+echo ""
+
+exit 0
