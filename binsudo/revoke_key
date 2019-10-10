@@ -9,22 +9,16 @@ source "$OPENVPN_VARS"
 
 name=$(cleanup_username "$1")
 
-export EASY_RSA="${EASY_RSA:-.}"
-
-result=$("$EASY_RSA/revoke-full" "$name" 2>&1; exit 0)
+result=$("$EASY_RSA --batch revoke" "$name" 2>&1; exit 0)
 echo "$result"
-revoked=$(echo "$result" | grep "certificate revoked" > /dev/null; echo "$?")
+revoked=$(echo "$result" | grep "Data Base Updated" > /dev/null; echo "$?")
 echo "Revoked: $revoked"
 
 if [ "$revoked" != "0" ] ; then
-	echo "Error: Can't revoke. Check openssl output"
+	echo "Error: Can't revoke. Check easy-rsa output"
 	exit 1
 fi
 
-if [ -f "$KEY_DIR/$name.key" ] ; then
-	rm "$KEY_DIR/$name".*
-fi
+"$EASY_RSA" gen-crl
 
-if [ -f "$OPENVPN_KEY_BACKUP_DIR/$name.key" ] ; then
-	rm "$OPENVPN_KEY_BACKUP_DIR/$name".*
-fi
+exit 0

@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/../config.sh"
+source "$OPENVPN_VARS"
+
+"$EASY_RSA" gen-crl
+
+exit 0

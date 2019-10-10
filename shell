@@ -13,10 +13,10 @@ function print_hello {
 
 function print_usage {
 	echo "Avialable commands:"
+	echo -e "\tgencrl\t -- generate new CRL"
 	echo -e "\tnew <username> <email>\t -- create new user key."
 	echo -e "\tnotify <username>\t -- send email with key to user"
 	echo -e "\temail <username>\t -- get stored email for user"
-	echo -e "\tbackup <username>\t -- move user key to backup"
 	echo -e "\tscp -f <username>.zip\t -- zip and download key"
 	echo -e "\trevoke <username>\t -- revoke user key"
 	echo ""
@@ -61,7 +61,7 @@ case "${PARAMS[0]}" in
 		;;
 	revoke)
 		print_hello
-                user=$(cleanup_username "${PARAMS[1]}")
+    user=$(cleanup_username "${PARAMS[1]}")
 		"${DIR}/commands/revoke" "${user}"
 		;;
 	email)
@@ -69,10 +69,9 @@ case "${PARAMS[0]}" in
 		user=$(cleanup_username "${PARAMS[1]}")
 		echo "Stored email for user $user is: $(user_email $user)"
 		;;
-	backup)
+	gencrl)
 		print_hello
-		user=$(cleanup_username "${PARAMS[1]}")
-		"${DIR}/commands/backup" "${user}"
+		"${DIR}/commands/gencrl"
 		;;
 	*)
 		print_hello

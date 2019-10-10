@@ -8,28 +8,28 @@ source "$DIR/../utils/error.sh"
 source "$DIR/../utils/user.sh"
 
 name=$(cleanup_username "$1")
-KEY_NAME="$name"
+EASYRSA_REQ_NAME="$name"
 
 if [ "$(user_exists $name)" == "0" ] ; then
 	print_error "User does not exist: $1"
 	exit 1
 fi
 
-KEY_EMAIL=$(user_email "$KEY_NAME")
+EASYRSA_REQ_EMAIL=$(user_email "$EASYRSA_REQ_NAME")
 
-if [ -n "$KEY_EMAIL" ] ; then
+if [ -n "$EASYRSA_REQ_EMAIL" ] ; then
 	source "$DIR/../utils/generate_user_conf.sh"
-	cfile=$(generate_user_conf "$KEY_NAME" "yes")
+	cfile=$(generate_user_conf "$EASYRSA_REQ_NAME")
 
-	export USERNAME="$KEY_NAME"
-	export EMAIL="$KEY_EMAIL"
+	export USERNAME="$EASYRSA_REQ_NAME"
+	export EMAIL="$EASYRSA_REQ_EMAIL"
 	export THEME="$NEW_KEY_MAIL_THEME"
 
 	message=$("$DIR/../$NEW_KEY_MAIL_TEMPLATE")
 
 	source "$DIR/../utils/email.sh"
 
-	result=$(send_email "$KEY_EMAIL" "$NEW_KEY_MAIL_THEME" "$message" "$cfile")
+	result=$(send_email "$EASYRSA_REQ_EMAIL" "$NEW_KEY_MAIL_THEME" "$message" "$cfile")
 
 	rm -rf "$(dirname "$cfile")"
 
@@ -38,11 +38,11 @@ if [ -n "$KEY_EMAIL" ] ; then
 		exit 2
 	fi
 else
-	print_error "Can't find email for user: $KEY_NAME"
+	print_error "Can't find email for user: $EASYRSA_REQ_NAME"
 	exit 1
 fi
 
-echo "User: $KEY_NAME notified"
+echo "User: $EASYRSA_REQ_NAME notified"
 echo ""
 
 exit 0

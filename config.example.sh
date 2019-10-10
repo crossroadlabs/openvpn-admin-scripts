@@ -17,5 +17,3 @@ OPENVPN_VARS="/etc/openvpn/vars" # Path to edited easy-rsa vars
 OPENVPN_CONF_TEMPLATE="Template.ovpn" # Path to preconfigured .ovpn (without keys)
 
 OPENVPN_USER="openvpn" # OpenVPN server user. Can be root or nobody or custom user
-
-OPENVPN_KEY_BACKUP_DIR="/etc/openvpn/key_backup" # Directory with less rights for key backup (accessible only with notify then).

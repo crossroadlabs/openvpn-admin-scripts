@@ -3,16 +3,22 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../config.sh"
-source "$DIR/../utils/user.sh"
 source "$OPENVPN_VARS"
 
-name=$(basename "$1")
-name=$(cleanup_username "$name")
+name="$1"
 
-if [ -z "$name" -o "$name" == "server.key" -o "$name" == "server.crt" ] ; then
+if [ -z "$name" ] ; then
 	exit 1
 fi
 
-cat "$KEY_DIR/$name"
+if [[ "$name" =~ \.\. ]] ; then
+  exit 1
+fi
+
+if [[ "$name" =~ server\..+$ ]] ; then
+  exit 1
+fi
+
+cat "$EASYRSA_PKI/$name"
 
 exit 0

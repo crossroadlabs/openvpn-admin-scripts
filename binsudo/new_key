@@ -7,9 +7,7 @@ source "$DIR/../config.sh"
 source "$DIR/../utils/user.sh"
 source "$OPENVPN_VARS"
 
-export KEY_NAME=$(cleanup_username "$1")
-export KEY_EMAIL="$2"
+export EASYRSA_REQ_NAME=$(cleanup_username "$1")
+export EASYRSA_REQ_EMAIL="$2"
 
-export EASY_RSA="${EASY_RSA:-.}"
-
-"$EASY_RSA/pkitool" $KEY_NAME
+"$EASY_RSA" build-client-full "$EASYRSA_REQ_NAME" nopass

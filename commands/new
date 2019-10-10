@@ -9,26 +9,26 @@ source "$DIR/../utils/user.sh"
 
 name=$(cleanup_username "$1")
 
-export KEY_NAME="$name"
-export KEY_EMAIL="$2"
+export EASYRSA_REQ_NAME="$name"
+export EASYRSA_REQ_EMAIL="$2"
 
 if [ "$(user_exists $name)" == "1" ] ; then
 	print_error "User already exists: $1"
 	exit 1
 fi
 
-sudo -H -u openvpn "$DIR/../binsudo/new_key" $KEY_NAME $KEY_EMAIL
+sudo -H -u $OPENVPN_USER "$DIR/../binsudo/new_key" $EASYRSA_REQ_NAME $EASYRSA_REQ_EMAIL
 
 if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
 	if [ "$SEND_USER_CONF_IN_NOTIFICATION" == "yes" ] ; then
 		source "$DIR/../utils/generate_user_conf.sh"
-		cfile=$(generate_user_conf $KEY_NAME)
+		cfile=$(generate_user_conf $EASYRSA_REQ_NAME)
 	else
 		cfile=""
 	fi
 
-	export USERNAME="$KEY_NAME"
-	export EMAIL="$KEY_EMAIL"
+	export USERNAME="$EASYRSA_REQ_NAME"
+	export EMAIL="$EASYRSA_REQ_EMAIL"
 	export THEME="$NEW_KEY_MAIL_THEME"
 
 	message=$("$DIR/../$NEW_KEY_MAIL_TEMPLATE")
@@ -45,7 +45,7 @@ if [ -n "$NOTIFY_ON_CHANGE_EMAIL" ] ; then
   fi
 fi
 
-echo "Key created for user: $KEY_NAME"
+echo "Key created for user: $EASYRSA_REQ_NAME"
 echo ""
 
 exit 0

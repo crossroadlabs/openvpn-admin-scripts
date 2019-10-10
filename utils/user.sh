@@ -12,7 +12,7 @@ function user_exists {
 		return 0
 	fi
 
-	user_line=$(tac "$KEY_DIR/index.txt" | grep "$1" | tail -n 1)
+	user_line=$(tac "$EASYRSA_PKI/index.txt" | grep "$1" | tail -n 1)
 	if [ -n "$user_line" ]; then
 		user_info=($user_line)
 		[[ "${user_info[0]}" == "V" ]] && echo "1" || echo  "0"
@@ -23,17 +23,17 @@ function user_exists {
 
 function user_email {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-        source "$DIR/../config.sh"
-        source "$OPENVPN_VARS"
+  source "$DIR/../config.sh"
+  source "$OPENVPN_VARS"
 
-	user_line=$(tac "$KEY_DIR/index.txt" | grep "$1" | tail -n 1)
-        if [ -n "$user_line" ]; then
-                user_info=($user_line)
-                if [ "${user_info[0]}" == "V" ] ; then
+	user_line=$(tac "$EASYRSA_PKI/index.txt" | grep "$1" | tail -n 1)
+  if [ -n "$user_line" ]; then
+    user_info=($user_line)
+    if [ "${user_info[0]}" == "V" ] ; then
 			echo $(echo "$user_line" | perl -ne 's|.*?emailAddress=([a-zA-Z0-9\.\-_]+@[a-zA-Z0-9\.\-]+)|\1|; print "$1"')
 			return 0
 		fi
-        fi
+  fi
 
 	return 1
 }

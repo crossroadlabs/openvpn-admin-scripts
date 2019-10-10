@@ -9,14 +9,11 @@ function generate_user_conf {
 
 	tmp=$(mktemp -d)
 
-	if [ -f "$KEY_DIR/$1.crt" ] ; then
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "$1.key" > "$tmp/$1.key"
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "$1.crt" > "$tmp/$1.crt"
-	elif [ "$2" == "yes" ] ; then
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_backup_key" "$1.crt" > "$tmp/$1.crt"
-		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_backup_key" "$1.key" > "$tmp/$1.key"
+	if [ -f "$EASYRSA_PKI/issued/$1.crt" ] ; then
+		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "private/$1.key" > "$tmp/$1.key"
+		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "issued/$1.crt" > "$tmp/$1.crt"
 	else
-		print_error "Key not found. Maybe it is backuped? Use notify then."
+		print_error "Key not found."
 	fi
 
 	sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "ca.crt" > "$tmp/ca.crt"
