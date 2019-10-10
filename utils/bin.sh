@@ -5,6 +5,6 @@ function run_bin_command() {
   cmd="$1"
   shift
 
-  echo $(sudo -H -u $OPENVPN_USER "$DIR/../binsudo/$cmd" $@)
+  sudo -H -u $OPENVPN_USER "$DIR/../binsudo/$cmd" $@
   return $?
 }
