@@ -2,8 +2,8 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "$DIR/../config.sh"
-source "$OPENVPN_VARS"
+
+source "$DIR/../utils/easyrsa.sh"
 
 name="$1"
 
@@ -19,6 +19,8 @@ if [[ "$name" =~ server\..+$ ]] ; then
   exit 1
 fi
 
-cat "$EASYRSA_PKI/$name"
+PKI="$(easyrsa_pki_path)"
+
+cat "$PKI/$name"
 
 exit 0

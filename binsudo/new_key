@@ -3,11 +3,10 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$DIR/../config.sh"
 source "$DIR/../utils/user.sh"
-source "$OPENVPN_VARS"
+source "$DIR/../utils/easyrsa.sh"
 
 export EASYRSA_REQ_NAME=$(cleanup_username "$1")
 export EASYRSA_REQ_EMAIL="$2"
 
-"$EASY_RSA" build-client-full "$EASYRSA_REQ_NAME" nopass
+easyrsa_call build-client-full "$EASYRSA_REQ_NAME" nopass

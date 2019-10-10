@@ -1,8 +1,5 @@
 function zip_user_conf {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-	source "$DIR/../config.sh"
-	source "$OPENVPN_VARS"
 	source "$DIR/generate_user_conf.sh"
 
 	if [ -z "$TMP" ]; then

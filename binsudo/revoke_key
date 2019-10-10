@@ -3,14 +3,14 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$DIR/../config.sh"
 source "$DIR/../utils/user.sh"
-source "$OPENVPN_VARS"
+source "$DIR/../utils/easyrsa.sh"
 
 name=$(cleanup_username "$1")
 
-result=$("$EASY_RSA --batch revoke" "$name" 2>&1; exit 0)
+result="$(easyrsa_call --batch revoke "$name" 2>&1; exit 0)"
 echo "$result"
+echo ""
 revoked=$(echo "$result" | grep "Data Base Updated" > /dev/null; echo "$?")
 echo "Revoked: $revoked"
 
@@ -19,6 +19,6 @@ if [ "$revoked" != "0" ] ; then
 	exit 1
 fi
 
-"$EASY_RSA" gen-crl
+easyrsa_call gen-crl
 
 exit 0

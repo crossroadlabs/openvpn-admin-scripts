@@ -12,7 +12,7 @@ NEW_KEY_MAIL_TEMPLATE="new_key.tsh" # Template for body of new key email (bash s
 
 REVOKE_KEY_MAIL_TEMPLATE="revoke_key.tsh" # Template for body of revoke email (bash script with echo)
 
-OPENVPN_VARS="/etc/openvpn/vars" # Path to edited easy-rsa vars
+OPENVPN_CA_DIR="/etc/openvpn/ca" # Path to easy-rsa ca directory
 
 OPENVPN_CONF_TEMPLATE="Template.ovpn" # Path to preconfigured .ovpn (without keys)
 

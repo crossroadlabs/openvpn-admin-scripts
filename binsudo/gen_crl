@@ -3,9 +3,8 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$DIR/../config.sh"
-source "$OPENVPN_VARS"
+source "$DIR/../utils/easyrsa.sh"
 
-"$EASY_RSA" gen-crl
+easyrsa_call gen-crl
 
 exit 0

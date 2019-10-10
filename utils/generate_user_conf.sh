@@ -1,15 +1,17 @@
 function generate_user_conf {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 	source "$DIR/../config.sh"
-	source "$OPENVPN_VARS"
+	source "$DIR/easyrsa.sh"
 
 	if [ -z "$TMP" ]; then
 		TMP="/tmp"
 	fi
 
+	PKI="$(easyrsa_pki_path)"
+
 	tmp=$(mktemp -d)
 
-	if [ -f "$EASYRSA_PKI/issued/$1.crt" ] ; then
+	if [ -f "$PKI/issued/$1.crt" ] ; then
 		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "private/$1.key" > "$tmp/$1.key"
 		sudo -u $OPENVPN_USER "$DIR/../binsudo/cat_key" "issued/$1.crt" > "$tmp/$1.crt"
 	else
