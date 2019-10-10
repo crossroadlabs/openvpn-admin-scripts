@@ -9,4 +9,4 @@ source "$DIR/../utils/easyrsa.sh"
 export EASYRSA_REQ_NAME=$(cleanup_username "$1")
 export EASYRSA_REQ_EMAIL="$2"
 
-easyrsa_call build-client-full "$EASYRSA_REQ_NAME" nopass
+easyrsa_call --batch build-client-full "$EASYRSA_REQ_NAME" nopass
